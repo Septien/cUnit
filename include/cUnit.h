@@ -39,13 +39,13 @@ typedef struct cUnit
  * @param teardown 
  * @param data 
  */
-void init(void (*setup)(void), void (*teardown)(void), void *data);
+void cunit_init(cUnit_t *cUnit, void (*setup)(void), void (*teardown)(void), void *data);
 
 /**
  * @brief Releases all the resourcess used.
  * 
  */
-void terminate(void);
+void cunit_terminate(cUnit_t *cUnit);
 
 /**
  * @brief Add a test to the list.
@@ -53,12 +53,12 @@ void terminate(void);
  * @param function_name 
  * @param test 
  */
-void add_test(char *function_name, void (*test)(void));
+void cunit_add_test(cUnit_t *cUnit, char *function_name, void (*test)(void));
 
 /**
  * @brief Execute all the allocated tests.
  * 
  */
-void execute_test(void);
+void cunit_execute_test(cUnit_t *cUnit);
 
 #endif      // C_UNIT_H
