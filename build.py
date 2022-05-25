@@ -4,7 +4,7 @@ def compile():
     cmd = "make clean LINUX=1"
     os.system(cmd)
 
-    cmd = "make all LINUX=1 CTEST=1"
+    cmd = "make all LINUX=1 CTEST=1 DEBUG=1"
     os.system(cmd)
     
     cmd = "make all term RIOT=1 CTEST=1"
