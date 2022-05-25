@@ -24,3 +24,16 @@ void cunit_init(cUnit_t **cUnit, void (*setup)(void), void (*teardown)(void), vo
     (*cUnit)->data = data;
     (*cUnit)->head = NULL;
 }
+
+void cunit_terminate(cUnit_t **cUnit)
+{
+    assert(cUnit != NULL);
+    assert(*cUnit != NULL);
+    
+    (*cUnit)->setup = NULL;
+    (*cUnit)->teardown = NULL;
+    (*cUnit)->data = NULL;
+
+    free(*cUnit);
+    *cUnit = NULL;
+}

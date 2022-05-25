@@ -47,7 +47,18 @@ void test_cunit_init(void)
     free(cUnit);
 }
 
+void test_cunit_terminate(void)
+{
+    cUnit_t *cUnit = NULL;
 
+    struct test_st st, *st2;
+    st2 = &st;
+
+    cunit_init(&cUnit, &dummy_setup, &dummy_teardown, st2);
+    
+    cunit_terminate(&cUnit);
+    assert(cUnit == NULL);
+}
 
 void cunit_tests(void)
 {
@@ -55,6 +66,10 @@ void cunit_tests(void)
 
     printf("Testing the cunit_init function.\n");
     test_cunit_init();
+    printf("Test passed.\n");
+
+    printf("Testing the cunit_terminate function.\n");
+    test_cunit_terminate();
     printf("Test passed.\n");
 
     return;
