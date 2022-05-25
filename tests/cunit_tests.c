@@ -47,6 +47,7 @@ void test_cunit_init(void)
 
 void dummy_test(void)
 {
+    printf("Dummy test.\n");
     return;
 }
 
@@ -115,6 +116,43 @@ void test_cunit_add_test(void)
     
 }
 
+void test_cunit_execute_tests(void)
+{
+    cUnit_t *cUnit = NULL;
+    struct test_st st, *st2;
+    st2 = &st;
+
+    cunit_init(&cUnit, &dummy_setup, &dummy_teardown, st2);
+
+    char name[20] = "functions_name_name\0";
+    cunit_add_test(cUnit, &dummy_test, name);
+    assert(cUnit->head != NULL);
+    assert(cUnit->last != NULL);
+    assert(cUnit->last == cUnit->head);
+    Test_t *test = cUnit->head;
+    assert(test != NULL);
+    assert(strncmp(name, test->function_name, 19) == 0);
+    assert(test->test == dummy_test);
+    assert(test->next == NULL);
+
+    Test_t *last = cUnit->last;
+    for (int i = 0; i < 20; i++)
+    {
+        cunit_add_test(cUnit, &dummy_test, name);
+        test = cUnit->last;
+        assert(test != NULL);
+        assert(last->next == test);
+        assert(strncmp(name, test->function_name, 19) == 0);
+        assert(test->test == dummy_test);
+        assert(test->next == NULL);
+        last = test;
+    }
+
+    cunit_execute_tests(cUnit);
+
+    cunit_terminate(&cUnit);
+}
+
 void cunit_tests(void)
 {
     printf("Testing the cUnit framework.\n");
@@ -129,6 +167,10 @@ void cunit_tests(void)
 
     printf("Testing the cunit_add_test function.\n");
     test_cunit_add_test();
+    printf("Test passed.\n");
+
+    printf("Testing the cunit_execute_tests function.\n");
+    test_cunit_execute_tests();
     printf("Test passed.\n");
 
     return;

@@ -77,3 +77,20 @@ void cunit_add_test(cUnit_t *cUnit, void (*test)(void), char *function_name)
         cUnit->last = cUnit->last->next;
     }
 }
+
+void cunit_execute_tests(cUnit_t *cUnit)
+{
+    assert(cUnit != NULL);
+    assert(cUnit->setup != NULL);
+    assert(cUnit->teardown != NULL);
+    assert(cUnit->data != NULL);
+    assert(cUnit->head != NULL);
+
+    for (Test_t *test = cUnit->head; test != NULL; test = test->next)
+    {
+        cUnit->setup();
+        printf("Testing the %s function.\n", test->function_name);
+        test->test();
+        cUnit->teardown();
+    }
+}
