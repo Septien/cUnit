@@ -39,11 +39,14 @@ $(info $$SRC_DIR is [$(SRC_DIR)])
 CFLAGS += -I$(INC_DIR)
 $(info $$CFLAGS is [$(CFLAGS)])
 
+ifdef CTEST
+include tests/Makefile.linux
+endif
+
 TARGETS = directories_cunit $(LIB_DIR)/libcunit
-ifdef TEST
+ifdef CTEST
 TARGETS += $(BIN_DIR)/cunit
 endif
-$(info rule is [$(INC_DIR)/cUnit.h])
 
 all : $(TARGETS)
 
@@ -62,7 +65,7 @@ $(OBJ_DIR)/cUnit.o : $(SRC_DIR)/cUnit.c
 
 $(OBJ_DIR)/cUnit.o : $(INC_DIR)/cUnit.h
 
-ifdef TEST
+ifdef CTEST
 $(BIN_DIR)/cunit : $(OBJ_DIR)/main.o
 	$(CC) $< -o $@ $(addprefix -L, $(LDFLAGS)) $(addprefix -l, $(LIBS))
 # Build main
@@ -98,8 +101,18 @@ CFLAGS += -DTESTING
 endif
 
 # Add include directory
-INCLUDES += -I/home/phantom/CP_Systems/Implementations/cUnit/include
+INCLUDES += -I$(CURDIR)/include
 
+ifdef CTEST
+USEMODULE += tests
+EXTERNAL_MODULE_DIRS += $(CURDIR)
+endif
+
+# Distinguish between an application (for developing and testing) and a module
+ifdef CTEST
 include $(RIOTBASE)/Makefile.include
+else
+include $(RIOTBASE)/Makefile.base
+endif
 
 endif

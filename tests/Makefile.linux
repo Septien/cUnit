@@ -1,0 +1,22 @@
+cunit_tests_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+cunit_tests_dir := $(notdir $(patsubst %/,%,$(dir $(cunit_tests_path))))
+
+INC_DIRT = $(cunit_tests_dir)/include
+
+CFLAGS += -I$(INC_DIRT)
+
+LIBS += cunitT
+
+TARGETS = $(LIB_DIR)/libcunitT
+
+$(info $$SRC_DIR is [$(SRC_DIR)])
+
+all : $(TARGETS)
+
+$(LIB_DIR)/libcunitT : $(OBJ_DIR)/cunit_tests.o
+	$(AR) $@.a $^
+
+$(OBJ_DIR)/cunit_tests.o : $(cunit_tests_dir)/cunit_tests.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/cunit_tests.o : $(INC_DIRT)/cunit_tests.h
