@@ -24,7 +24,6 @@ $(info $$OBJ_DIR is [$(OBJ_DIR)])
 $(info $$LIB_DIR is [$(LIB_DIR)])
 
 LDFLAGS += $(LIB_DIR)
-LIBS += cunit
 
 MKDIR_BIN_CUNIT := mkdir -p $(BIN_DIR)
 MKDIR_OBJ_CUNIT := mkdir -p $(OBJ_DIR)
@@ -42,6 +41,8 @@ $(info $$CFLAGS is [$(CFLAGS)])
 ifdef CTEST
 include tests/Makefile.linux
 endif
+
+LIBS += cunit
 
 TARGETS = directories_cunit $(LIB_DIR)/libcunit
 ifdef CTEST
@@ -74,6 +75,11 @@ $(OBJ_DIR)/main.o : $(SRC_DIR)/main.c
 
 $(OBJ_DIR)/main.o : $(INC_DIR)/cUnit.h
 endif
+
+clean:
+	rm bin/linux-x86_64/cunit
+	rm bin/linux-x86_64/lib_cunit/*
+	rm bin/linux-x86_64/obj_cunit/*
 
 endif
 
