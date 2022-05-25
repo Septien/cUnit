@@ -11,6 +11,8 @@
 #ifndef C_UNIT_H
 #define C_UNIT_H
 
+#include <string.h>
+
 #ifndef FUNCTION_NAME_SIZE
 #define FUNCTION_NAME_SIZE  40
 #endif
@@ -29,6 +31,7 @@ typedef struct
     void (*teardown)(void);
     void *data;
     Test_t *head;
+    Test_t *last;
 }cUnit_t;
 
 /**
@@ -54,7 +57,7 @@ void cunit_terminate(cUnit_t **cUnit);
  * @param function_name 
  * @param test 
  */
-void cunit_add_test(cUnit_t *cUnit, void (*test)(void), char *function_name, size_t name_size);
+void cunit_add_test(cUnit_t *cUnit, void (*test)(void), char *function_name);
 
 /**
  * @brief Execute all the allocated tests.

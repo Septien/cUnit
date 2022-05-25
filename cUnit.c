@@ -23,6 +23,7 @@ void cunit_init(cUnit_t **cUnit, void (*setup)(void), void (*teardown)(void), vo
     (*cUnit)->teardown = teardown;
     (*cUnit)->data = data;
     (*cUnit)->head = NULL;
+    (*cUnit)->last = NULL;
 }
 
 void cunit_terminate(cUnit_t **cUnit)
@@ -34,6 +35,45 @@ void cunit_terminate(cUnit_t **cUnit)
     (*cUnit)->teardown = NULL;
     (*cUnit)->data = NULL;
 
+
+    for (Test_t *head = (*cUnit)->head; head != NULL; )
+    {
+        Test_t *next = NULL;
+        if (head != NULL)
+        {
+            next = head->next;
+        }
+        free(head);
+        head = next;
+    }
+
     free(*cUnit);
     *cUnit = NULL;
+}
+
+void cunit_add_test(cUnit_t *cUnit, void (*test)(void), char *function_name)
+{
+    assert(cUnit != NULL);
+    assert(test != NULL);
+    assert(function_name != NULL);
+
+    Test_t *new_test = (Test_t *)malloc(sizeof(Test_t));
+    if (new_test == NULL)
+        return;
+    
+    strcpy(new_test->function_name, function_name);
+    new_test->test = test;
+    new_test->next = NULL;
+    
+    // No tests added
+    if (cUnit->head == NULL)
+    {
+        cUnit->head = new_test;
+        cUnit->last = new_test;
+    }
+    else        // Append at end of list
+    {
+        cUnit->last->next = new_test;
+        cUnit->last = cUnit->last->next;
+    }
 }
