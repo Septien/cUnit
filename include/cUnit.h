@@ -11,4 +11,6 @@
 #ifndef C_UNIT_H
 #define C_UNIT_H
 
+void init(void);
+
 #endif      // C_UNIT_H

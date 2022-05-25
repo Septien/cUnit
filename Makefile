@@ -40,6 +40,9 @@ CFLAGS += -I$(INC_DIR)
 $(info $$CFLAGS is [$(CFLAGS)])
 
 TARGETS = directories_cunit $(LIB_DIR)/libcunit
+ifdef TEST
+TARGETS += $(BIN_DIR)/cunit
+endif
 $(info rule is [$(INC_DIR)/cUnit.h])
 
 all : $(TARGETS)
@@ -94,5 +97,9 @@ ifdef TEST
 CFLAGS += -DTESTING
 endif
 
+# Add include directory
+INCLUDES += -I/home/phantom/CP_Systems/Implementations/cUnit/include
+
+include $(RIOTBASE)/Makefile.include
 
 endif
