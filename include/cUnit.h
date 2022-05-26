@@ -19,19 +19,19 @@
 
 typedef struct Test
 {
-    char function_name[FUNCTION_NAME_SIZE];
-    void (*test)(void);
+    char        function_name[FUNCTION_NAME_SIZE];
+    void        (*test)(void *);
     struct Test *next;
 }Test_t;
 
 
 typedef struct
 {
-    void (*setup)(void);
-    void (*teardown)(void);
-    void *data;
-    Test_t *head;
-    Test_t *last;
+    void    (*setup)(void *);
+    void    (*teardown)(void *);
+    void    *data;
+    Test_t  *head;
+    Test_t  *last;
 }cUnit_t;
 
 /**
@@ -43,7 +43,7 @@ typedef struct
  * @param teardown 
  * @param data 
  */
-void cunit_init(cUnit_t **cUnit, void (*setup)(void), void (*teardown)(void), void *data);
+void cunit_init(cUnit_t **cUnit, void (*setup)(void *), void (*teardown)(void *), void *data);
 
 /**
  * @brief Releases all the resourcess used.
@@ -57,7 +57,7 @@ void cunit_terminate(cUnit_t **cUnit);
  * @param function_name 
  * @param test 
  */
-void cunit_add_test(cUnit_t *cUnit, void (*test)(void), char *function_name);
+void cunit_add_test(cUnit_t *cUnit, void (*test)(void *), char *function_name);
 
 /**
  * @brief Execute all the allocated tests.

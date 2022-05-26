@@ -10,55 +10,73 @@
 #include "malloc.h"
 #endif
 
-void dummy_setup(void)
-{
-    return;
-}
+/* Encapsulate the data. */
+struct data {
+    cUnit_t *cUnit_test;
+};
 
-void dummy_teardown(void)
-{
-    return;
-}
-
+/* Necessary data and functions for testing the framework. */
 struct test_st
 {
     int a;
     int b;
 };
 
-
-void test_cunit_init(void)
+void dummy_setup(void *arg)
 {
-    cUnit_t *cUnit = NULL;
+    (void) arg;
+    return;
+}
 
+void dummy_teardown(void *arg)
+{
+    (void) arg;
+    return;
+}
+
+/* Setup and Teardown functions. */
+void setup(void *arg)
+{
+    struct data *cunit_data = (struct data *)arg;
     struct test_st st, *st2;
     st2 = &st;
 
-    cunit_init(&cUnit, &dummy_setup, &dummy_teardown, st2);
+    cunit_init(&cunit_data->cUnit_test, &dummy_setup, &dummy_teardown, st2);
+}
+
+void teardown(void *arg)
+{
+    struct data *cunit_data = (struct data *)arg;
+
+    cunit_terminate(&cunit_data->cUnit_test);
+}
+
+/* Test functions. */
+void test_cunit_init(void *arg)
+{
+    struct data *cunit_data = (struct data *)arg;
+    cUnit_t *cUnit = cunit_data->cUnit_test;
+
     assert(cUnit != NULL);
     assert(cUnit->setup == dummy_setup);
     assert(cUnit->teardown == dummy_teardown);
-    assert(cUnit->data == st2);
+    assert(cUnit->data != NULL);
     assert(cUnit->head == NULL);
     assert(cUnit->last == NULL);
-
-    cunit_terminate(&cUnit);
 }
 
-void dummy_test(void)
+void dummy_test(void *arg)
 {
+    (void) arg;
     printf("Dummy test.\n");
     return;
 }
 
-void test_cunit_terminate(void)
+void test_cunit_terminate(void *arg)
 {
-    cUnit_t *cUnit = NULL;
+    struct data *cunit_data = (struct data *)arg;
+    cUnit_t *cUnit = cunit_data->cUnit_test;
 
-    struct test_st st, *st2;
-    st2 = &st;
-
-    cunit_init(&cUnit, &dummy_setup, &dummy_teardown, st2);
     char name[20] = "functions_name_name\0";
     cunit_add_test(cUnit, &dummy_test, name);
 
@@ -77,15 +95,16 @@ void test_cunit_terminate(void)
     
     cunit_terminate(&cUnit);
     assert(cUnit == NULL);
-}
 
-void test_cunit_add_test(void)
-{
-    cUnit_t *cUnit = NULL;
     struct test_st st, *st2;
     st2 = &st;
+    cunit_init(&cUnit, &dummy_setup, &dummy_teardown, (void *)&st2);
+}
 
-    cunit_init(&cUnit, &dummy_setup, &dummy_teardown, st2);
+void test_cunit_add_test(void *arg)
+{
+    struct data *cunit_data = (struct data *)arg;
+    cUnit_t *cUnit = cunit_data->cUnit_test;
 
     // Add first test
     char name[20] = "functions_name_name\0";
@@ -111,18 +130,12 @@ void test_cunit_add_test(void)
         assert(test->next == NULL);
         last = test;
     }
-
-    cunit_terminate(&cUnit);
-    
 }
 
-void test_cunit_execute_tests(void)
+void test_cunit_execute_tests(void *arg)
 {
-    cUnit_t *cUnit = NULL;
-    struct test_st st, *st2;
-    st2 = &st;
-
-    cunit_init(&cUnit, &dummy_setup, &dummy_teardown, st2);
+    struct data *cunit_data = (struct data *)arg;
+    cUnit_t *cUnit = cunit_data->cUnit_test;
 
     char name[20] = "functions_name_name\0";
     cunit_add_test(cUnit, &dummy_test, name);
@@ -149,29 +162,23 @@ void test_cunit_execute_tests(void)
     }
 
     cunit_execute_tests(cUnit);
-
-    cunit_terminate(&cUnit);
 }
 
 void cunit_tests(void)
 {
+    cUnit_t *cUnit;
+    struct data cunit_data;
+
+    cunit_init(&cUnit, setup, teardown, (void *)&cunit_data);
+
+    cunit_add_test(cUnit, test_cunit_init, "test_cunit_init\0");
+    cunit_add_test(cUnit, test_cunit_terminate, "test_cunit_terminate\0");
+    cunit_add_test(cUnit, test_cunit_add_test, "test_cunit_add_test\0");
+    cunit_add_test(cUnit, test_cunit_execute_tests, "test_cunit_execute_tests\0");
+
     printf("Testing the cUnit framework.\n");
+    cunit_execute_tests(cUnit);
 
-    printf("Testing the cunit_init function.\n");
-    test_cunit_init();
-    printf("Test passed.\n");
-
-    printf("Testing the cunit_terminate function.\n");
-    test_cunit_terminate();
-    printf("Test passed.\n");
-
-    printf("Testing the cunit_add_test function.\n");
-    test_cunit_add_test();
-    printf("Test passed.\n");
-
-    printf("Testing the cunit_execute_tests function.\n");
-    test_cunit_execute_tests();
-    printf("Test passed.\n");
-
+    cunit_terminate(&cUnit);
     return;
 }

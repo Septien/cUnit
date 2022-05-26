@@ -8,7 +8,7 @@
 #include "malloc.h"
 #endif
 
-void cunit_init(cUnit_t **cUnit, void (*setup)(void), void (*teardown)(void), void *data)
+void cunit_init(cUnit_t **cUnit, void (*setup)(void *), void (*teardown)(void *), void *data)
 {
     assert(cUnit != NULL);
     assert(setup != NULL);
@@ -51,7 +51,7 @@ void cunit_terminate(cUnit_t **cUnit)
     *cUnit = NULL;
 }
 
-void cunit_add_test(cUnit_t *cUnit, void (*test)(void), char *function_name)
+void cunit_add_test(cUnit_t *cUnit, void (*test)(void *), char *function_name)
 {
     assert(cUnit != NULL);
     assert(test != NULL);
@@ -88,9 +88,10 @@ void cunit_execute_tests(cUnit_t *cUnit)
 
     for (Test_t *test = cUnit->head; test != NULL; test = test->next)
     {
-        cUnit->setup();
+        cUnit->setup(cUnit->data);
         printf("Testing the %s function.\n", test->function_name);
-        test->test();
-        cUnit->teardown();
+        test->test(cUnit->data);
+        printf("Test passed.\n");
+        cUnit->teardown(cUnit->data);
     }
 }
