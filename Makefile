@@ -118,6 +118,8 @@ endif
 ifdef CTEST
 include $(RIOTBASE)/Makefile.include
 else
+SRC = cUnit.c
+
 include $(RIOTBASE)/Makefile.base
 endif
 
