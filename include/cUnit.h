@@ -14,7 +14,7 @@
 #include <string.h>
 
 #ifndef FUNCTION_NAME_SIZE
-#define FUNCTION_NAME_SIZE  40
+#define FUNCTION_NAME_SIZE  80
 #endif
 
 typedef struct Test
