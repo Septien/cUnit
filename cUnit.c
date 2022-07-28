@@ -90,16 +90,16 @@ void cunit_execute_tests(cUnit_t *cUnit)
 
     for (Test_t *test = cUnit->head; test != NULL; test = test->next)
     {
-        printf("Testing the %s function.\n", test->function_name);
+        printf("\033[0;30mTesting %s\033[0m.\n", test->function_name);
         cUnit->setup(cUnit->data);
         bool value = test->test(cUnit->data);
         cUnit->teardown(cUnit->data);
         if (value) {
-            printf("Test passed.\n");
+            printf("\033[0;32mTest passed\033[0m.\n");
             cUnit->tests_passed++;
         }
         else {
-            printf("Test failed.\n");
+            printf("\033[0;31mTest failed\033[0m.\n");
             cUnit->tests_failed++;
         }
     }
