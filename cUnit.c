@@ -24,6 +24,8 @@ void cunit_init(cUnit_t **cUnit, void (*setup)(void *), void (*teardown)(void *)
     (*cUnit)->data = data;
     (*cUnit)->head = NULL;
     (*cUnit)->last = NULL;
+    (*cUnit)->tests_passed = 0;
+    (*cUnit)->tests_passed = 0;
 }
 
 void cunit_terminate(cUnit_t **cUnit)
@@ -51,7 +53,7 @@ void cunit_terminate(cUnit_t **cUnit)
     *cUnit = NULL;
 }
 
-void cunit_add_test(cUnit_t *cUnit, void (*test)(void *), char *function_name)
+void cunit_add_test(cUnit_t *cUnit, bool (*test)(void *), char *function_name)
 {
     assert(cUnit != NULL);
     assert(test != NULL);
@@ -88,10 +90,19 @@ void cunit_execute_tests(cUnit_t *cUnit)
 
     for (Test_t *test = cUnit->head; test != NULL; test = test->next)
     {
-        cUnit->setup(cUnit->data);
         printf("Testing the %s function.\n", test->function_name);
-        test->test(cUnit->data);
-        printf("Test passed.\n");
+        cUnit->setup(cUnit->data);
+        bool value = test->test(cUnit->data);
         cUnit->teardown(cUnit->data);
+        if (value) {
+            printf("Test passed.\n");
+            cUnit->tests_passed++;
+        }
+        else {
+            printf("Test failed.\n");
+            cUnit->tests_failed++;
+        }
     }
+    printf("\n\nFrom a total of \033[0;30m %d tests\033[0m, \033[0;32m%d passed\033[0m, and \033[0;31m%d failed\033[0m.\n",
+            cUnit->tests_passed + cUnit->tests_failed, cUnit->tests_passed, cUnit->tests_failed);
 }

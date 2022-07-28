@@ -12,6 +12,7 @@
 #define C_UNIT_H
 
 #include <string.h>
+#include <stdbool.h>
 
 #ifndef FUNCTION_NAME_SIZE
 #define FUNCTION_NAME_SIZE  80
@@ -20,7 +21,7 @@
 typedef struct Test
 {
     char        function_name[FUNCTION_NAME_SIZE];
-    void        (*test)(void *);
+    bool        (*test)(void *);
     struct Test *next;
 }Test_t;
 
@@ -32,6 +33,8 @@ typedef struct
     void    *data;
     Test_t  *head;
     Test_t  *last;
+    uint    tests_passed;
+    uint    tests_failed;
 }cUnit_t;
 
 /**
@@ -57,7 +60,7 @@ void cunit_terminate(cUnit_t **cUnit);
  * @param function_name 
  * @param test 
  */
-void cunit_add_test(cUnit_t *cUnit, void (*test)(void *), char *function_name);
+void cunit_add_test(cUnit_t *cUnit, bool (*test)(void *), char *function_name);
 
 /**
  * @brief Execute all the allocated tests.
