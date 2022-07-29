@@ -114,6 +114,7 @@ bool check_condition(bool old_value, bool condition, char *condition_name, char 
 
     if (!condition) {
         strcat(str, condition_name);
+        strcat(str, " failed.\n");
     }
 
     return return_value;

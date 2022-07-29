@@ -230,7 +230,7 @@ bool test_check_condition(void *arg)
      *  -The condition is true. It should return old_condition && condition.
      *  -Nothing should be appended to the string.
      */
-    char str[20] = {0};
+    char str[30] = {0};
     bool passed_test = true;
     bool result = check_condition(passed_test, true, NULL, str);
     passed = passed && result;
@@ -238,7 +238,7 @@ bool test_check_condition(void *arg)
     passed_test = false;
     result = check_condition(passed_test, true, NULL, str);
     passed = passed && (!result);
-    char test[20] = {0};
+    char test[30] = {0};
     passed = passed && (strcmp(str, test) == 0);
 
     /**
@@ -249,7 +249,7 @@ bool test_check_condition(void *arg)
     passed_test = true;
     result = check_condition(passed_test, false, "Condition failed\0", str);
     passed = passed && (!result);
-    passed = passed && (strcmp(str, "Condition failed\0") == 0);
+    passed = passed && (strcmp(str, "Condition failed failed.\n\0") == 0);
 
     return passed;
 }
