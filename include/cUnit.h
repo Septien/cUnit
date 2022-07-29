@@ -68,4 +68,17 @@ void cunit_add_test(cUnit_t *cUnit, bool (*test)(void *), char *function_name);
  */
 void cunit_execute_tests(cUnit_t *cUnit);
 
+/**
+ * @brief Check whether the condition @p condition holds. If not, appends
+ * @p condition_name to @p str, for later print and debugging information.
+ * 
+ * @param old_value         previous value of the variable.
+ * @param condition         value to update condition.
+ * @param condition_name    Description of the condition to evaluate.
+ * @param str               String to append the description of the failure.
+ * @param pos               Position to append the description.
+ * @return @p old_value && @p condition
+ */
+bool check_condition(bool old_value, bool condition, char *condition_name, char *str, int pos);
+
 #endif      // C_UNIT_H

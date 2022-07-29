@@ -106,3 +106,15 @@ void cunit_execute_tests(cUnit_t *cUnit)
     printf("\n\nFrom a total of \033[0;30m %d tests\033[0m, \033[0;32m%d passed\033[0m, and \033[0;31m%d failed\033[0m.\n",
             cUnit->tests_passed + cUnit->tests_failed, cUnit->tests_passed, cUnit->tests_failed);
 }
+
+bool check_condition(bool old_value, bool condition, char *condition_name, char *str, int pos)
+{
+    assert(str != NULL);
+    bool return_value = old_value && condition;
+
+    if (!condition) {
+        strcat(str + pos, condition_name);
+    }
+
+    return return_value;
+}

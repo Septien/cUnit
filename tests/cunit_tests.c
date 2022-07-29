@@ -220,6 +220,42 @@ bool test_cunit_execute_tests(void *arg)
     return passed;
 }
 
+bool test_check_condition(void *arg)
+{
+    (void) arg;
+
+    bool passed = true;
+    /**
+     * Test case 1:
+     *  -The condition is true. It should return old_condition && condition.
+     *  -Nothing should be appended to the string.
+     */
+    char str[20] = {0};
+    int pos = 0;
+    bool passed_test = true;
+    bool result = check_condition(passed_test, true, NULL, str, pos);
+    passed = passed && result;
+    passed = passed && (pos == 0);
+
+    passed_test = false;
+    result = check_condition(passed_test, true, NULL, str, pos);
+    passed = passed && (!result);
+    char test[20] = {0};
+    passed = passed && (strcmp(str, test) == 0);
+
+    /**
+     * Test case 2:
+     *  -The condition is false. It should return old_condition && condition.
+     *  -The string condition_name should be concatenated to str.
+     */
+    passed_test = true;
+    result = check_condition(passed_test, false, "Condition failed\0", str, 0);
+    passed = passed && (!result);
+    passed = passed && (strcmp(str, "Condition failed\0") == 0);
+
+    return passed;
+}
+
 void cunit_tests(void)
 {
     cUnit_t *cUnit;
@@ -227,10 +263,11 @@ void cunit_tests(void)
 
     cunit_init(&cUnit, setup, teardown, (void *)&cunit_data);
 
-    cunit_add_test(cUnit, test_cunit_init, "test_cunit_init\0");
-    cunit_add_test(cUnit, test_cunit_terminate, "test_cunit_terminate\0");
-    cunit_add_test(cUnit, test_cunit_add_test, "test_cunit_add_test\0");
-    cunit_add_test(cUnit, test_cunit_execute_tests, "test_cunit_execute_tests\0");
+    cunit_add_test(cUnit, test_cunit_init, "cunit_init\0");
+    cunit_add_test(cUnit, test_cunit_terminate, "cunit_terminate\0");
+    cunit_add_test(cUnit, test_cunit_add_test, "cunit_add_test\0");
+    cunit_add_test(cUnit, test_cunit_execute_tests, "cunit_execute_tests\0");
+    cunit_add_test(cUnit, test_check_condition, "check_condition\0");
 
     printf("Testing the cUnit framework.\n");
     cunit_execute_tests(cUnit);
