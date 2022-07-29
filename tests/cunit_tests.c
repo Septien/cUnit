@@ -231,14 +231,12 @@ bool test_check_condition(void *arg)
      *  -Nothing should be appended to the string.
      */
     char str[20] = {0};
-    int pos = 0;
     bool passed_test = true;
-    bool result = check_condition(passed_test, true, NULL, str, pos);
+    bool result = check_condition(passed_test, true, NULL, str);
     passed = passed && result;
-    passed = passed && (pos == 0);
 
     passed_test = false;
-    result = check_condition(passed_test, true, NULL, str, pos);
+    result = check_condition(passed_test, true, NULL, str);
     passed = passed && (!result);
     char test[20] = {0};
     passed = passed && (strcmp(str, test) == 0);
@@ -249,7 +247,7 @@ bool test_check_condition(void *arg)
      *  -The string condition_name should be concatenated to str.
      */
     passed_test = true;
-    result = check_condition(passed_test, false, "Condition failed\0", str, 0);
+    result = check_condition(passed_test, false, "Condition failed\0", str);
     passed = passed && (!result);
     passed = passed && (strcmp(str, "Condition failed\0") == 0);
 

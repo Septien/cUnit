@@ -107,13 +107,13 @@ void cunit_execute_tests(cUnit_t *cUnit)
             cUnit->tests_passed + cUnit->tests_failed, cUnit->tests_passed, cUnit->tests_failed);
 }
 
-bool check_condition(bool old_value, bool condition, char *condition_name, char *str, int pos)
+bool check_condition(bool old_value, bool condition, char *condition_name, char *str)
 {
     assert(str != NULL);
     bool return_value = old_value && condition;
 
     if (!condition) {
-        strcat(str + pos, condition_name);
+        strcat(str, condition_name);
     }
 
     return return_value;
