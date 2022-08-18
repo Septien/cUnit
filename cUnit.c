@@ -25,7 +25,7 @@ void cunit_init(cUnit_t **cUnit, void (*setup)(void *), void (*teardown)(void *)
     (*cUnit)->head = NULL;
     (*cUnit)->last = NULL;
     (*cUnit)->tests_passed = 0;
-    (*cUnit)->tests_passed = 0;
+    (*cUnit)->tests_failed = 0;
 }
 
 void cunit_terminate(cUnit_t **cUnit)
